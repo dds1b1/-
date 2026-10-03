@@ -1,0 +1,33 @@
+import json
+import sys
+import requests
+from bs4 import BeautifulSoup
+import csv
+import time
+result = []
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+for n in range(1,4):
+    try:
+        url = f"https://books.toscrape.com/catalogue/page-{n}.html"
+        resp = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+        resp.encoding = "utf-8"
+        soup = BeautifulSoup(resp.text, "html.parser")
+        books = soup.find_all('article',class_="product_pod")
+        for b in books:
+            title = b.h3.a.get("title")
+            price = b.find("p", class_="price_color").get_text()
+            if price is not None:
+                result.append({'title':title,'price':price})
+            else:
+                result.append({'title':title,'price':'notfound:price'})
+        time.sleep(1)
+    except Exception as e:
+        print(type(e),f'{n}wrong')
+        continue
+with open('book_json',"w", encoding="utf-8-sig") as f:
+    json.dump(result, f, ensure_ascii=False, indent=2)
+with open("books.csv", "w", newline="", encoding="utf-8-sig") as f:
+    w = csv.DictWriter(f, fieldnames=["title", "price"])
+    w.writeheader()   
+    w.writerows(result)
+print(result)
