@@ -194,7 +194,14 @@ def save(rows, path=CSV_FILE):
 
     验证：跑完后打开 profiles.csv，应该能看到表头 + 50 行数据
     """
-    pass               # ← 把这里替换成你的代码
+    
+    with open(path, "a", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS)
+        if  not os.path.exists(path):
+            w.writeheader()
+        w.writerows(rows)
+  
+        
 
 
 # ==================================================================
