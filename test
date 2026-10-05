@@ -6,6 +6,7 @@ import csv
 import time
 import os
 result = []
+have = set()
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 def savepage():
@@ -16,6 +17,11 @@ def loadpage():
         with open('data.txt', "r") as f:
             return int(f.read().strip())
     return 0
+missprice = 0
+
+
+
+
 num = loadpage()
 
 for n in range(num+1,4):
@@ -28,10 +34,16 @@ for n in range(num+1,4):
         for b in books:
             title = b.h3.a.get("title")
             price = b.find("p", class_="price_color").get_text()
-            if price is not None:
-                result.append({'title':title,'price':price})
+            if title and price not in have:
+                if price is not None:
+                    result.append({'title':title,'price':price})
+                    have.add((title, price))
+                else:
+                    missprice += 1
+                    result.append({'title':title,'price':f'notfound:price{missprice}'})
+                    have.add((title, f'notfound:price{missprice}'))
             else:
-                result.append({'title':title,'price':'notfound:price'})
+                continue
         savepage()
         time.sleep(1)
     except Exception as e:
