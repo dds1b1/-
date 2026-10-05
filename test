@@ -9,9 +9,9 @@ result = []
 have = set()
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-def savepage():
+def savepage(page):
     with open('data.txt', "w") as f:
-        f.write(str(n))
+        f.write(str(page))
 def loadpage():
     if os.path.exists('data.txt'):
         with open('data.txt', "r") as f:
@@ -34,21 +34,21 @@ for n in range(num+1,4):
         for b in books:
             title = b.h3.a.get("title")
             price = b.find("p", class_="price_color").get_text()
-            if title and price not in have:
-                if price is not None:
+            if title not in have:
+                if price != '':
                     result.append({'title':title,'price':price})
-                    have.add((title, price))
+                    have.add(title)
                 else:
                     missprice += 1
                     result.append({'title':title,'price':f'notfound:price{missprice}'})
-                    have.add((title, f'notfound:price{missprice}'))
+                    have.add(title)
             else:
                 continue
-        savepage()
+        savepage(n)
         time.sleep(1)
     except Exception as e:
         print(type(e),f'{n}wrong')
-        savepage()
+        savepage(n)
         continue
 with open('book_json',"w", encoding="utf-8-sig") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
