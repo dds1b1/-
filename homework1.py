@@ -152,6 +152,7 @@ def extract(p):
             skills += s["ontologySkill"]["preferredLabel"] + ", "
         else:
             continue
+    
     return {
         "person_id": p.get("personId"),
         "name": (pdata.get("firstName") or "") + " " + (pdata.get("lastName") or ""),
@@ -173,6 +174,7 @@ def extract(p):
 # ==================================================================
 #  ★ TODO 2：把一批数据追加写进 CSV
 # ==================================================================
+seen = set()     
 def save(rows, path=CSV_FILE):
     """
     输入：rows = 一个列表，里面每个元素都是 TODO 1 返回的字典
@@ -194,10 +196,11 @@ def save(rows, path=CSV_FILE):
 
     验证：跑完后打开 profiles.csv，应该能看到表头 + 50 行数据
     """
-    
+    new = not os.path.exists(path)
     with open(path, "a", newline="", encoding="utf-8-sig") as f:
+
         w = csv.DictWriter(f, fieldnames=FIELDS)
-        if  not os.path.exists(path):
+        if new:
             w.writeheader()
         w.writerows(rows)
   
@@ -256,7 +259,9 @@ def main():
             rows = []
             for p in profiles:
                 got = extract(p)
-                if got:
+                if got and got["person_id"] not in seen:
+                    rows.append(got)
+                    seen.add(got["person_id"])
                     rows.append(got)
             print("  extract() 转换出 %d 条，示例：%s" % (len(rows), rows[0] if rows else "（空——TODO 1 还没写吧？）"))
 
