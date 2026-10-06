@@ -41,7 +41,8 @@ TOKEN_RE = re.compile(r"oauth2v2_int_[0-9a-f]{32}")
 
 KEYWORD = "video editor"
 ROWS = 50        # 服务端上限就是 50，别改大（改了会返回 0 条，这是坑）
-PAGES = 2        # 今天只抓前 2 页，够你练手了
+PAGES = 50  
+PROGRESS = os.path.join(HERE, "progress.txt")    # 今天只抓前 2 页，够你练手了
 
 QUERY = json.load(open(BODY_FILE, encoding="utf-8"))["query"]
 
@@ -175,7 +176,7 @@ def extract(p):
 #  ★ TODO 2：把一批数据追加写进 CSV
 # ==================================================================
 seen = set()     
-def save(rows, path=CSV_FILE):
+def save(rows,page_no, path=CSV_FILE):
     """
     输入：rows = 一个列表，里面每个元素都是 TODO 1 返回的字典
     要做的：把这批数据**追加**写入 CSV 文件
@@ -203,6 +204,9 @@ def save(rows, path=CSV_FILE):
         if new:
             w.writeheader()
         w.writerows(rows)
+
+    with open(PROGRESS, "w", encoding="utf-8") as f:
+        f.write(str(page_no))
   
         
 
@@ -236,17 +240,28 @@ def main():
         if not auth:
             print("!! 没找到可用令牌。检查一下：浏览器里是否已登录 Upwork？")
             return
-
-        for i in range(PAGES):
+        start_page = 0
+        if os.path.exists(PROGRESS):
+            txt = open(PROGRESS, encoding="utf-8").read().strip()
+            start_page = int(txt) if txt else 0
+        for i in range(start_page, PAGES):
+            page_no = i 
             start = i * ROWS          # 第 0 页 start=0，第 1 页 start=50
             print("\n--- 抓第 %d 页（start=%d）---" % (i + 1, start))
             profiles, pinfo = fetch_page(page, auth, tenant, start)
+            
+            if not profiles:
+                print(" 重连令牌")
+                auth = find_token(page, ctx, tenant)
+                if not auth:
+                    print("没找到可用令牌")   
+                    break
+                profiles, pinfo = fetch_page(page, auth, tenant, start)
+            
             print("  拿到 %d 条 | 总人数 total=%s" % (len(profiles), pinfo.get("total")))
             if not profiles:
-                print("  0 条！可能是 rows 超上限 / 令牌失效 / 已经抓到底了")
-                break
-
-            # 先看一眼原始数据长什么样（帮你写 TODO 1 用）
+                print("  还是 0 条，跳过这页（可能是真的到底了）")
+                continue
             if i == 0:
                 print("\n  【原始数据速查】第一条的顶层字段：")
                 print("   ", list(profiles[0].keys()))
@@ -262,11 +277,10 @@ def main():
                 if got and got["person_id"] not in seen:
                     rows.append(got)
                     seen.add(got["person_id"])
-                    rows.append(got)
             print("  extract() 转换出 %d 条，示例：%s" % (len(rows), rows[0] if rows else "（空——TODO 1 还没写吧？）"))
 
             if rows:
-                save(rows)
+                save(rows, page_no)
                 print("  已写入 %s" % CSV_FILE)
             time.sleep(3)             # 限速：每次请求间隔 3 秒
 
