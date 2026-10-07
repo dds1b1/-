@@ -1,0 +1,12 @@
+person_id	p["personId"]	                          1
+name	    firstName + " " + lastName	              3
+title	    personalData.title	                      3
+country	    personalData.location.country	          4
+city	    personalData.location.city	              4
+hourly_rate	personalData.chargeRate.rawValue	      4
+currency	personalData.chargeRate.currency	      4
+job_success	profile.profileAggregates.nSS100BwScore	  3
+total_earned profile.profileAggregates.totalEarnings	 3
+skills	    profile.skills[i].ontologySkill.preferredLabel   → join	3 + 列表
+profile_url	personalData.profileUrl                 	3
+description	personalData.description	                3
