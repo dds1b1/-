@@ -35,3 +35,6 @@ __pycache__/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# 讲怎么推 GitHub 的说明，不算作业内容
+GitHub提交教材.md
