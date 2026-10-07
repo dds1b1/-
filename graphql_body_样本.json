@@ -1,0 +1,19 @@
+{
+  "query": "\n  query UserFreelancerSearch($request: UserFreelancerSearchV2Request!) {\n    search {\n      universalSearchNuxt {\n        userFreelancerSearchV2(request: $request) {\n          pagingInfo {\n            total\n            offset\n            count\n            originTotal\n            pagesTotal\n            page\n          }\n          queryType\n          adaptiveSkills {\n            id\n            prefLabel\n            ontologyId\n          }\n          \n    guidedSpecialties {\n      specialties {\n        uid: guidedSpecialtyUid\n        ontologyId\n        label: preferredLabel\n      }\n    }\n  \n          relevantSkillIds\n          resultFlags {\n            portfolioSearch\n          }\n          facets {\n            hourlyRate {\n              key\n              value\n            }\n          }\n          \n          profiles {\n            \n            \n            \n            individualTotalEarnings\n            agencyTotalEarnings\n            offerConsultations\n            jobSummariesAssignmentRids\n            personId\n            totalCompletedJobs\n            insertionId\n            rankInfo {\n              d\n              iv\n            }\n            vetted\n            profile {\n              identity {\n                id\n                ciphertext\n              }\n              personAvailability {\n                purchasedInvitationBadge {\n                  active\n                }\n              }\n              personalData {\n                title\n                firstName\n                lastName\n                description\n                location {\n                  country\n                  state\n                  city\n                  region\n                  subregion\n                  timezone\n                  zip\n                }\n                chargeRate {\n    rawValue\n    currency\n  }\n                portrait {\n                  portrait100\n                }\n                profileUrl\n              }\n              skills {\n                ontologySkill {\n                  id\n                  preferredLabel\n                  prettyName\n                  definition\n                }\n              }\n              projectList {\n                totalProjects\n                projects {\n                  id\n                  title\n                  projectUrl\n                  thumbnail\n                  category\n                  categoryId\n                  subCategory\n                  description\n                  videoUrl\n                  public\n                }\n              }\n              verifications {\n                idBadgeStatus\n                idVerified\n              }\n              agencies {\n                defaultAgencyId\n                agencies {\n                  orgId\n                  ciphertext\n                  name\n                  classifications {\n                    id\n                    name\n                  }\n                  logo\n                }\n              }\n              preferences {\n                hideEarnings\n                hideJss\n              }\n              profileAggregates {\n                nSS100BwScore\n                topRatedStatus\n                topRatedPlusStatus\n                totalHours\n                totalHourlyJobs\n                totalEarnings\n                totalFixedJobs\n              }\n              communityCertificates {\n                expirationDate\n              }\n            }\n          }\n        }\n      }\n    }\n  }",
+  "variables": {
+    "request": {
+      "individualEarningsSearch": true,
+      "paging": {
+        "start": 60,
+        "rows": 10
+      },
+      "facets": [
+        "hourly_rate"
+      ],
+      "addGoodSummaries10Rids": true,
+      "userQuery": "logo design",
+      "clientAccount": false,
+      "addGuidedSpecialties": true
+    }
+  }
+}
