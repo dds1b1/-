@@ -24,7 +24,7 @@ missprice = 0
 
 num = loadpage()
 
-for n in range(num+1,4):
+for n in range(num+1,31):
     try:
         url = f"https://books.toscrape.com/catalogue/page-{n}.html"
         resp = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=20)

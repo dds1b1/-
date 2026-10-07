@@ -23,7 +23,7 @@ if os.path.exists('record.txt')and num < 31:
             for b in books:
                 title = b.h3.a.get("title")
                 price = b.find("p", class_="price_color").get_text()
-                if price is not None:
+                if price != '':
                     result.append({'title':title,'price':price})
             else:
                 result.append({'title':title,'price':'notfound:price'})
