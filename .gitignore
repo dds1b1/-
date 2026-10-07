@@ -1,0 +1,37 @@
+# ============================================================
+#  不想上传的东西（都留在硬盘上，只是不进 git）
+# ============================================================
+
+# 运行时产物：断点文件，每次跑都会变
+progress.txt
+data.txt
+
+# 数据备份：清洗前的快照，3.9MB，没必要传
+profiles_备份.csv
+profiles_原始备份*.csv
+
+# 空文件 / 重复副本
+day4
+day5复现清洗去重
+
+# AI 排查问题时临时写的脚本
+诊断500.py
+诊断令牌.py
+
+# 浏览器数据目录：里面是 Upwork 登录 cookie，绝对不能上传
+upwork_edge_profile/
+upwork_profile/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 编辑器 / 工具目录
+.claude/
+.workbuddy/
+.vscode/
+
+# 操作系统垃圾
+Thumbs.db
+Desktop.ini
+.DS_Store
